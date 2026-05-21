@@ -54,14 +54,12 @@ async function searchMovie(reset = true) {
             } else {
                 status.textContent = "No more results.";
             }
-
             loading = false;
             return;
         }
 
         total = Number(data.totalResults);
-
-        await showMovies(data.Search, result);
+        showMovies(data.Search, result);
 
         let countNow = result.children.length;
 
@@ -74,57 +72,46 @@ async function searchMovie(reset = true) {
         localStorage.setItem("lastMovie", lastSearch);
     } catch (e) {
         status.textContent = "Error while fetching data.";
-        console.log(e);
+        console.error(e);
     }
 
     loading = false;
 }
 
-async function showMovies(arr, place) {
-    for (let one of arr) {
-        try {
-            let res = await fetch(`https://www.omdbapi.com/?apikey=${key}&i=${one.imdbID}`);
-            let info = await res.json();
+function showMovies(arr, place) {
+    // Performans ve kota dostu yeni döngü
+    for (let info of arr) {
+        let card = document.createElement("div");
+        card.className = "movie-card";
 
-            let card = document.createElement("div");
-            card.className = "movie-card";
+        let img = document.createElement("img");
+        img.src = fix(info.Poster, "https://via.placeholder.com/100x150");
 
-            let img = document.createElement("img");
+        img.onerror = function () {
+            this.onerror = null;
+            this.src = "https://via.placeholder.com/100x150";
+        };
 
-            img.src = info.Poster;
+        let right = document.createElement("div");
+        right.className = "movie-info";
 
-            img.onerror = function () {
-                this.onerror = null;
-                this.src = "https://via.placeholder.com/100x150";
-            };
+        let title = document.createElement("h3");
+        title.textContent = fix(info.Title, "No title");
 
-            let right = document.createElement("div");
-            right.className = "movie-info";
+        let year = document.createElement("p");
+        year.textContent = "Year: " + fix(info.Year, "Unknown");
 
-            let title = document.createElement("h3");
-            title.textContent = fix(info.Title, "No title");
+        let type = document.createElement("p");
+        type.textContent = "Type: " + fix(info.Type, "Unknown");
 
-            let year = document.createElement("p");
-            year.textContent = "Year: " + fix(info.Year, "Unknown");
+        right.appendChild(title);
+        right.appendChild(year);
+        right.appendChild(type);
 
-            let genre = document.createElement("p");
-            genre.textContent = "Genre: " + fix(info.Genre, "Not specified");
+        card.appendChild(img);
+        card.appendChild(right);
 
-            let director = document.createElement("p");
-            director.textContent = "Director: " + fix(info.Director, "Unknown");
-
-            right.appendChild(title);
-            right.appendChild(year);
-            right.appendChild(genre);
-            right.appendChild(director);
-
-            card.appendChild(img);
-            card.appendChild(right);
-
-            place.appendChild(card);
-        } catch (e) {
-            console.log("detail error", e);
-        }
+        place.appendChild(card);
     }
 }
 
@@ -136,7 +123,6 @@ window.addEventListener("scroll", async function () {
     if (lastSearch === "") return;
 
     let countNow = result.children.length;
-
     if (countNow >= total) return;
 
     let top = window.scrollY;
@@ -162,7 +148,6 @@ document.getElementById("movieInput").addEventListener("keydown", function (e) {
 
 window.addEventListener("load", function () {
     let old = localStorage.getItem("lastMovie");
-
     if (old) {
         document.getElementById("movieInput").value = old;
         searchMovie(true);
