@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Movie Search</h1>
+        <p>Search movies, series, and episodes from OMDb.</p>
+    </header>
+
+    <main>
+        <div class="search-bar" id="searchPanel">
+            <label class="visually-hidden" for="movieInput">Movie name</label>
+            <input type="search" id="movieInput" placeholder="Enter movie name" autocomplete="off">
+
+            <label class="visually-hidden" for="typeFilter">Type</label>
+            <select id="typeFilter">
+                <option value="">All</option>
+                <option value="movie">Movie</option>
+                <option value="series">Series</option>
+                <option value="episode">Episode</option>
+            </select>
+
+            <button id="searchBtn" type="button">Search</button>
+        </div>
+
+        <section class="toolbar" aria-live="polite">
+            <div id="status">Enter a title to start searching.</div>
+            <button id="clearBtn" class="secondary" type="button" hidden>Clear</button>
+        </section>
+
+        <section id="result" class="results" aria-label="Search results"></section>
+        <div id="sentinel" class="sentinel" aria-hidden="true"></div>
+    </main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="js/firebase-config.js?v=1"></script>
+<script src="js/config.js?v=5"></script>
+<script src="js/omdbApi.js?v=5"></script>
+<script src="js/storage.js?v=5"></script>
+<script src="js/ui.js?v=5"></script>
+<script src="js/main.js?v=5"></script>
+</body>
+</html>

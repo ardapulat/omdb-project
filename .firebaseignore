@@ -1,0 +1,12 @@
+.git
+.gitignore
+.firebase
+node_modules
+*.log
+README.md
+README2.md
+start-server.bat
+.firebaserc.example
+server.js
+package.json
+package-lock.json
